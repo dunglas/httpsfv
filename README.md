@@ -17,7 +17,7 @@ This [Go (golang)](https://golang.org) library implements parsing and serializat
 
 ## Docs
 
-[Browse the documentation on Go.dev](https://pkg.go.dev/dunglas/httpsfv).
+[Browse the documentation on Go.dev](https://pkg.go.dev/github.com/dunglas/httpsfv).
 
 ## Credits
 
