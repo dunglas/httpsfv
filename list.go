@@ -87,6 +87,9 @@ func parseList(s *scanner) (List, error) {
 // parseItemOrInnerList parses as defined in
 // https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#parse-item-or-list.
 func parseItemOrInnerList(s *scanner) (Member, error) {
+	if s.eof() {
+		return nil, &UnmarshalError{s.off, ErrInvalidInnerListFormat}
+	}
 	if s.data[s.off] == '(' {
 		return parseInnerList(s)
 	}

@@ -99,6 +99,7 @@ func TestUnmarshalDictionary(t *testing.T) {
 		valid    bool
 	}{
 		{[]string{"a=?0, b, c; foo=bar"}, d1, false},
+		{[]string{"a="}, nil, false},
 		{[]string{"a=?0, b", "c; foo=bar"}, d1, false},
 		{[]string{""}, NewDictionary(), false},
 		{[]string{"é"}, nil, true},
