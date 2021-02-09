@@ -1,6 +1,6 @@
 # httpsfv: Structured Field Values for HTTP in Go
 
-This [Go (golang)](https://golang.org) library implements parsing and serialization for [Structured Field Values for HTTP](https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html).
+This [Go (golang)](https://golang.org) library implements parsing and serialization for [Structured Field Values for HTTP (RFC 8941)](https://httpwg.org/specs/rfc8941.html).
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/dunglas/httpsfv)](https://pkg.go.dev/github.com/dunglas/httpsfv)
 ![CI](https://github.com/dunglas/httpsfv/workflows/CI/badge.svg)
@@ -9,7 +9,7 @@ This [Go (golang)](https://golang.org) library implements parsing and serializat
 
 ## Features
 
-* Implements the latest version (19) of the Internet-Draft
+* Fully implemented the RFC
 * Compliant with [the official test suite](https://github.com/httpwg/structured-field-tests)
 * Unit tested
 * Strongly-typed

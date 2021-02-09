@@ -2,7 +2,7 @@ package httpsfv
 
 // Member is a marker interface for members of dictionaries and lists.
 //
-// See https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#list.
+// See https://httpwg.org/specs/rfc8941.html#list.
 type Member interface {
 	member()
 	marshaler

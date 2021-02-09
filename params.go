@@ -7,7 +7,7 @@ import (
 
 // Params are an ordered map of key-value pairs that are associated with an item or an inner list.
 //
-// See https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#param.
+// See https://httpwg.org/specs/rfc8941.html#param.
 type Params struct {
 	names  []string
 	values map[string]interface{}
@@ -72,7 +72,7 @@ func (p *Params) Names() []string {
 }
 
 // marshalSFV serializes as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#ser-params.
+// https://httpwg.org/specs/rfc8941.html#ser-params.
 func (p *Params) marshalSFV(b *strings.Builder) error {
 	for _, k := range p.names {
 		if err := b.WriteByte(';'); err != nil {
@@ -101,7 +101,7 @@ func (p *Params) marshalSFV(b *strings.Builder) error {
 }
 
 // parseParams parses as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#parse-param.
+// https://httpwg.org/specs/rfc8941.html#parse-param.
 func parseParams(s *scanner) (*Params, error) {
 	p := NewParams()
 
