@@ -7,6 +7,8 @@ import (
 )
 
 func TestParameters(t *testing.T) {
+	t.Parallel()
+
 	p := NewParams()
 
 	add := []struct {
@@ -66,20 +68,20 @@ func TestParameters(t *testing.T) {
 		t.Errorf(`Get("notexist") = %v, %v; nil, false expected`, v, ok)
 	}
 
-	k := p.Names()
-	if len(k) != 5 {
+	if k := p.Names(); len(k) != 5 {
 		t.Errorf(`Names() = %v; {"f_o1o3-", "*f0.o*"} expected`, k)
 	}
 
 	b.Reset()
-	err := p.marshalSFV(&b)
 
-	if b.String() != `;f_o1o3-=123.0;*f0.o*="";t;f=?0;b=:AAE=:` {
+	if err := p.marshalSFV(&b); b.String() != `;f_o1o3-=123.0;*f0.o*="";t;f=?0;b=:AAE=:` {
 		t.Errorf(`marshalSFV(): invalid serialization: %v (%v)`, b.String(), err)
 	}
 }
 
 func TestParseParameters(t *testing.T) {
+	t.Parallel()
+
 	p0 := NewParams()
 	p0.Add("foo", true)
 	p0.Add("*bar", "baz")

@@ -3,6 +3,8 @@ package httpsfv
 import "testing"
 
 func TestDecodeError(t *testing.T) {
+	t.Parallel()
+
 	_, err := UnmarshalItem([]string{"invalid-é"})
 
 	if err.Error() != "unmarshal error: character 8" {

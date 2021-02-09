@@ -7,6 +7,8 @@ import (
 )
 
 func TestDictionnary(t *testing.T) {
+	t.Parallel()
+
 	dict := NewDictionary()
 
 	add := []struct {
@@ -67,8 +69,7 @@ func TestDictionnary(t *testing.T) {
 		t.Errorf(`Get("notexist") = %v, %v; nil, false expected`, v, ok)
 	}
 
-	k := dict.Names()
-	if len(k) != 5 {
+	if k := dict.Names(); len(k) != 5 {
 		t.Errorf(`Names() = %v; {"f_o1o3-", "*f0.o*"} expected`, k)
 	}
 
@@ -85,6 +86,8 @@ func TestDictionnary(t *testing.T) {
 }
 
 func TestUnmarshalDictionary(t *testing.T) {
+	t.Parallel()
+
 	d1 := NewDictionary()
 	d1.Add("a", NewItem(false))
 	d1.Add("b", NewItem(true))

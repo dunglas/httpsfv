@@ -7,6 +7,8 @@ import (
 )
 
 func TestStringMarshalSFV(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in       string
 		expected string
@@ -44,6 +46,8 @@ func TestStringMarshalSFV(t *testing.T) {
 }
 
 func TestParseString(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in  string
 		out string

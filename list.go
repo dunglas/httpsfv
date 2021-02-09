@@ -90,6 +90,7 @@ func parseItemOrInnerList(s *scanner) (Member, error) {
 	if s.eof() {
 		return nil, &UnmarshalError{s.off, ErrInvalidInnerListFormat}
 	}
+
 	if s.data[s.off] == '(' {
 		return parseInnerList(s)
 	}

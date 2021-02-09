@@ -6,6 +6,8 @@ import (
 )
 
 func TestIntegerMarshalSFV(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in       int64
 		expected string
@@ -39,6 +41,8 @@ func TestIntegerMarshalSFV(t *testing.T) {
 }
 
 func TestParseIntegerOrDecimal(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in       string
 		expected interface{}

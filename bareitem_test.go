@@ -8,6 +8,8 @@ import (
 )
 
 func TestParseBareItem(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in  string
 		out interface{}
@@ -40,6 +42,8 @@ func TestParseBareItem(t *testing.T) {
 }
 
 func TestMarshalBareItem(t *testing.T) {
+	t.Parallel()
+
 	defer func() {
 		if r := recover(); r == nil {
 			t.Errorf("The code did not panic")
@@ -51,6 +55,8 @@ func TestMarshalBareItem(t *testing.T) {
 }
 
 func TestAssertBareItem(t *testing.T) {
+	t.Parallel()
+
 	defer func() {
 		if r := recover(); r == nil {
 			t.Errorf("The code did not panic")
