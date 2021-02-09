@@ -9,7 +9,7 @@ import (
 var ErrInvalidBooleanFormat = errors.New("invalid boolean format")
 
 // marshalBoolean serializes as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#ser-boolean.
+// https://httpwg.org/specs/rfc8941.html#ser-boolean.
 func marshalBoolean(bd io.StringWriter, b bool) error {
 	if b {
 		_, err := bd.WriteString("?1")
@@ -23,7 +23,7 @@ func marshalBoolean(bd io.StringWriter, b bool) error {
 }
 
 // parseBoolean parses as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#parse-boolean.
+// https://httpwg.org/specs/rfc8941.html#parse-boolean.
 func parseBoolean(s *scanner) (bool, error) {
 	if s.eof() || s.data[s.off] != '?' {
 		return false, &UnmarshalError{s.off, ErrInvalidBooleanFormat}

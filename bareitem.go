@@ -13,7 +13,7 @@ var ErrInvalidBareItem = errors.New(
 )
 
 // assertBareItem asserts that v is a valid bare item
-// according to https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#item.
+// according to https://httpwg.org/specs/rfc8941.html#item.
 //
 // v can be either:
 //
@@ -48,7 +48,7 @@ func assertBareItem(v interface{}) {
 }
 
 // marshalBareItem serializes as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#ser-bare-item.
+// https://httpwg.org/specs/rfc8941.html#ser-bare-item.
 func marshalBareItem(b *strings.Builder, v interface{}) error {
 	switch v := v.(type) {
 	case bool:
@@ -74,7 +74,7 @@ func marshalBareItem(b *strings.Builder, v interface{}) error {
 }
 
 // parseBareItem parses as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#parse-bare-item.
+// https://httpwg.org/specs/rfc8941.html#parse-bare-item.
 func parseBareItem(s *scanner) (interface{}, error) {
 	if s.eof() {
 		return nil, &UnmarshalError{s.off, ErrUnexpectedEndOfString}

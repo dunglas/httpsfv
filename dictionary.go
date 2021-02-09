@@ -6,7 +6,7 @@ import (
 )
 
 // Dictionary is an ordered map of name-value pairs.
-// See https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#dictionary
+// See https://httpwg.org/specs/rfc8941.html#dictionary
 // Values can be:
 //   * Item (Section 3.3.)
 //   * Inner List (Section 3.1.1.)
@@ -101,7 +101,7 @@ func (d *Dictionary) marshalSFV(b *strings.Builder) error {
 }
 
 // UnmarshalDictionary parses a dictionary as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#parse-dictionary.
+// https://httpwg.org/specs/rfc8941.html#parse-dictionary.
 func UnmarshalDictionary(v []string) (*Dictionary, error) {
 	s := &scanner{
 		data: strings.Join(v, ","),

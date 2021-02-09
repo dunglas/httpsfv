@@ -1,5 +1,5 @@
 // Package httpsfv implements serializing and parsing
-// of Structured Field Values for HTTP as defined in the draft-ietf-httpbis-header-structure Internet-Draft.
+// of Structured Field Values for HTTP as defined in RFC 8941.
 //
 // Structured Field Values are either lists, dictionaries or items. Dedicated types are provided for all of them.
 // Dedicated types are also used for tokens, parameters and inner lists.
@@ -11,7 +11,7 @@
 //	byte[], for byte sequences
 //	bool, for booleans
 //
-// The specification is available at https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html.
+// The specification is available at https://httpwg.org/specs/rfc8941.html.
 package httpsfv
 
 import (
@@ -29,7 +29,7 @@ type StructuredFieldValue interface {
 }
 
 // Marshal returns the HTTP Structured Value serialization of v
-// as defined in https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#text-serialize.
+// as defined in https://httpwg.org/specs/rfc8941.html#text-serialize.
 //
 // v must be a List, a Dictionary or an Item.
 func Marshal(v StructuredFieldValue) (string, error) {

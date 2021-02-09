@@ -23,7 +23,7 @@ const (
 )
 
 // marshalInteger serialized as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#integer.
+// https://httpwg.org/specs/rfc8941.html#integer.
 func marshalInteger(b io.StringWriter, i int64) error {
 	if i < -999999999999999 || i > 999999999999999 {
 		return ErrNumberOutOfRange
@@ -35,7 +35,7 @@ func marshalInteger(b io.StringWriter, i int64) error {
 }
 
 // parseNumber parses as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#parse-number.
+// https://httpwg.org/specs/rfc8941.html#parse-number.
 func parseNumber(s *scanner) (interface{}, error) {
 	neg := isNeg(s)
 	if neg && s.eof() {

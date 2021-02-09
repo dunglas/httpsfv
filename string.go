@@ -11,7 +11,7 @@ import (
 var ErrInvalidStringFormat = errors.New("invalid string format")
 
 // marshalSFV serializes as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#ser-string.
+// https://httpwg.org/specs/rfc8941.html#ser-string.
 func marshalString(b io.ByteWriter, s string) error {
 	if err := b.WriteByte('"'); err != nil {
 		return err
@@ -42,7 +42,7 @@ func marshalString(b io.ByteWriter, s string) error {
 }
 
 // parseString parses as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#parse-string.
+// https://httpwg.org/specs/rfc8941.html#parse-string.
 func parseString(s *scanner) (string, error) {
 	if s.eof() || s.data[s.off] != '"' {
 		return "", &UnmarshalError{s.off, ErrInvalidStringFormat}

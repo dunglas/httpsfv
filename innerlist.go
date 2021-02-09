@@ -9,7 +9,7 @@ import (
 var ErrInvalidInnerListFormat = errors.New("invalid inner list format")
 
 // InnerList represents an inner list as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#inner-list.
+// https://httpwg.org/specs/rfc8941.html#inner-list.
 type InnerList struct {
 	Items  []Item
 	Params *Params
@@ -19,7 +19,7 @@ func (il InnerList) member() {
 }
 
 // marshalSFV serializes as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#ser-innerlist.
+// https://httpwg.org/specs/rfc8941.html#ser-innerlist.
 func (il InnerList) marshalSFV(b *strings.Builder) error {
 	if err := b.WriteByte('('); err != nil {
 		return err
@@ -46,7 +46,7 @@ func (il InnerList) marshalSFV(b *strings.Builder) error {
 }
 
 // parseInnerList parses as defined in
-// https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html#parse-item-or-list.
+// https://httpwg.org/specs/rfc8941.html#parse-item-or-list.
 func parseInnerList(s *scanner) (InnerList, error) {
 	if s.eof() || s.data[s.off] != '(' {
 		return InnerList{}, &UnmarshalError{s.off, ErrInvalidInnerListFormat}
