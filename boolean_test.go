@@ -6,6 +6,8 @@ import (
 )
 
 func TestBooleanMarshalSFV(t *testing.T) {
+	t.Parallel()
+
 	var b strings.Builder
 
 	_ = marshalBoolean(&b, true)
@@ -23,6 +25,8 @@ func TestBooleanMarshalSFV(t *testing.T) {
 }
 
 func TestParseBoolean(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in  string
 		out bool

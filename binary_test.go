@@ -7,6 +7,8 @@ import (
 )
 
 func TestBinary(t *testing.T) {
+	t.Parallel()
+
 	var bd strings.Builder
 	_ = marshalBinary(&bd, []byte{4, 2})
 
@@ -16,6 +18,8 @@ func TestBinary(t *testing.T) {
 }
 
 func TestParseBinary(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in  string
 		out []byte

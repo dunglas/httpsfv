@@ -6,6 +6,8 @@ import (
 )
 
 func TestTokenMarshalSFV(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in    string
 		valid bool
@@ -59,6 +61,8 @@ func TestTokenMarshalSFV(t *testing.T) {
 }
 
 func TestParseToken(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in  string
 		out Token

@@ -135,6 +135,8 @@ func valToDictionary(e interface{}) *Dictionary {
 }
 
 func TestOfficialTestSuiteParsing(t *testing.T) {
+	t.Parallel()
+
 	const dir = "structured-field-tests/"
 	f, _ := os.Open(dir)
 	files, _ := f.Readdir(-1)
@@ -245,6 +247,8 @@ func BenchmarkSerializingOfficialExamples(b *testing.B) {
 }
 
 func TestOfficialTestSuiteSerialization(t *testing.T) {
+	t.Parallel()
+
 	const dir = "structured-field-tests/serialisation-tests/"
 
 	f, _ := os.Open(dir)

@@ -6,6 +6,8 @@ import (
 )
 
 func TestList(t *testing.T) {
+	t.Parallel()
+
 	params := NewParams()
 	params.Add("foo", true)
 	params.Add("bar", Token("baz"))
@@ -49,6 +51,8 @@ func TestList(t *testing.T) {
 }
 
 func TestUnmarshalList(t *testing.T) {
+	t.Parallel()
+
 	l1 := List{Item{Token("foo"), NewParams()}, Item{Token("bar"), NewParams()}}
 
 	il2 := Item{"foo", NewParams()}

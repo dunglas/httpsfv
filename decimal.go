@@ -21,9 +21,9 @@ func marshalDecimal(b io.StringWriter, d float64) error {
 	const TH = 0.001
 
 	rounded := math.RoundToEven(d/TH) * TH
-	int, frac := math.Modf(math.RoundToEven(d/TH) * TH)
+	i, frac := math.Modf(math.RoundToEven(d/TH) * TH)
 
-	if int < -999999999999 || int > 999999999999 {
+	if i < -999999999999 || i > 999999999999 {
 		return ErrInvalidDecimal
 	}
 

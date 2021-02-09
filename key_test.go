@@ -6,6 +6,8 @@ import (
 )
 
 func TestKeyMarshalSFV(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in       string
 		expected string
@@ -37,6 +39,8 @@ func TestKeyMarshalSFV(t *testing.T) {
 }
 
 func TestParseKey(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in       string
 		expected string

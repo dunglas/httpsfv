@@ -6,6 +6,8 @@ import (
 )
 
 func TestInnerList(t *testing.T) {
+	t.Parallel()
+
 	foo := NewItem("foo")
 	foo.Params.Add("a", true)
 	foo.Params.Add("b", 1936)

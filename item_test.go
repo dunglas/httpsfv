@@ -7,6 +7,8 @@ import (
 )
 
 func TestMarshalItem(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in       Item
 		expected string
@@ -49,6 +51,8 @@ func TestMarshalItem(t *testing.T) {
 }
 
 func TestItemParamsMarshalSFV(t *testing.T) {
+	t.Parallel()
+
 	i := NewItem(Token("bar"))
 	i.Params.Add("foo", 0.0)
 	i.Params.Add("baz", true)
@@ -62,6 +66,8 @@ func TestItemParamsMarshalSFV(t *testing.T) {
 }
 
 func TestUnmarshalItem(t *testing.T) {
+	t.Parallel()
+
 	i1 := NewItem(true)
 	i1.Params.Add("foo", true)
 	i1.Params.Add("*bar", Token("tok"))

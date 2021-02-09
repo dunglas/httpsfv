@@ -6,6 +6,8 @@ import (
 )
 
 func TestDecimalMarshalSFV(t *testing.T) {
+	t.Parallel()
+
 	data := []struct {
 		in       float64
 		expected string
