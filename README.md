@@ -14,6 +14,7 @@ This [Go (golang)](https://golang.org) library implements parsing and serializat
 * Unit tested
 * Strongly-typed
 * Fast (see [the benchmark](httpwg_test.go))
+* No dependencies
 
 ## Docs
 
