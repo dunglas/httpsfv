@@ -31,7 +31,7 @@ type StructuredFieldValue interface {
 // Marshal returns the HTTP Structured Value serialization of v
 // as defined in https://httpwg.org/specs/rfc8941.html#text-serialize.
 //
-// v must be a List, a Dictionary or an Item.
+// v must be a List, a Dictionary, an Item or an InnerList.
 func Marshal(v StructuredFieldValue) (string, error) {
 	var b strings.Builder
 	if err := v.marshalSFV(&b); err != nil {
