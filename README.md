@@ -9,7 +9,7 @@ This [Go (golang)](https://golang.org) library implements parsing and serializat
 
 ## Features
 
-* Fully implemented the RFC
+* Fully implementing the RFC
 * Compliant with [the official test suite](https://github.com/httpwg/structured-field-tests)
 * Unit tested
 * Strongly-typed
