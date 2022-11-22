@@ -5,6 +5,7 @@ import (
 	"io"
 	"math"
 	"strconv"
+	"strings"
 )
 
 const maxDecDigit = 3
@@ -21,18 +22,18 @@ func marshalDecimal(b io.StringWriter, d float64) error {
 	const TH = 0.001
 
 	rounded := math.RoundToEven(d/TH) * TH
-	i, frac := math.Modf(math.RoundToEven(d/TH) * TH)
+	i, frac := math.Modf(rounded)
 
 	if i < -999999999999 || i > 999999999999 {
 		return ErrInvalidDecimal
 	}
 
-	if _, err := b.WriteString(strconv.FormatFloat(rounded, 'f', -1, 64)); err != nil {
+	if _, err := b.WriteString(strings.TrimRight(strconv.FormatFloat(rounded, 'f', 3, 64), "0")); err != nil {
 		return err
 	}
 
 	if frac == 0 {
-		_, err := b.WriteString(".0")
+		_, err := b.WriteString("0")
 
 		return err
 	}

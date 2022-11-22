@@ -23,6 +23,7 @@ func TestDecimalMarshalSFV(t *testing.T) {
 		{9999999999999, "", false},
 		{-9999999999999.0, "", false},
 		{9999999999999.0, "", false},
+		{1.9, "1.9", true},
 	}
 
 	var b strings.Builder
