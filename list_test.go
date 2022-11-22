@@ -100,3 +100,41 @@ func TestUnmarshalList(t *testing.T) {
 		}
 	}
 }
+
+func FuzzUnmarshalList(f *testing.F) {
+	testCases := []string{"",
+		"foo,bar",
+		"foo, bar",
+		"foo,\t bar",
+		"foo", "bar",
+		`"foo";bar;baz=tok`,
+		`(foo bar);bat`,
+		`()`,
+		`   "foo";bar;baz=tok,  (foo bar);bat `,
+		`foo,bar,`,
+		`foo,baré`,
+		`é`,
+		`foo,"bar"  é`,
+		`(foo `,
+		`(foo);é`,
+		`("é")`,
+		`(""`,
+		`(`,
+	}
+
+	for _, t := range testCases {
+		f.Add(t)
+	}
+
+	f.Fuzz(func(t *testing.T, b string) {
+		l, err := UnmarshalList([]string{b})
+
+		if err != nil {
+			return
+		}
+
+		if _, err := Marshal(l); err != nil {
+			t.Errorf("Unexpected marshaling error %q for %q, %#v", err, b, l)
+		}
+	})
+}
