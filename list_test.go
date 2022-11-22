@@ -120,6 +120,7 @@ func FuzzUnmarshalList(f *testing.F) {
 		`("é")`,
 		`(""`,
 		`(`,
+		"1.9",
 	}
 
 	for _, t := range testCases {
@@ -127,14 +128,23 @@ func FuzzUnmarshalList(f *testing.F) {
 	}
 
 	f.Fuzz(func(t *testing.T, b string) {
-		l, err := UnmarshalList([]string{b})
-
+		unmarshaled, err := UnmarshalList([]string{b})
 		if err != nil {
 			return
 		}
 
-		if _, err := Marshal(l); err != nil {
-			t.Errorf("Unexpected marshaling error %q for %q, %#v", err, b, l)
+		reMarshaled, err := Marshal(unmarshaled)
+		if err != nil {
+			t.Errorf("Unexpected marshaling error %q for %q, %#v", err, b, unmarshaled)
+		}
+
+		reUnmarshaled, err := UnmarshalList([]string{reMarshaled})
+		if err != nil {
+			t.Errorf("Unexpected remarshaling error %q for %q; original %q", err, reMarshaled, b)
+		}
+
+		if !reflect.DeepEqual(unmarshaled, reUnmarshaled) {
+			t.Errorf("Unmarshaled and re-unmarshaled doesn't match: %#v; %#v", unmarshaled, reUnmarshaled)
 		}
 	})
 }
