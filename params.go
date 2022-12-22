@@ -19,6 +19,9 @@ var ErrInvalidParameterFormat = errors.New("invalid parameter format")
 // ErrInvalidParameterValue is returned when a parameter key is invalid.
 var ErrInvalidParameterValue = errors.New("invalid parameter value")
 
+// ErrMissingParameters is returned when the Params structure is missing from the element.
+var ErrMissingParameters = errors.New("missing parameters")
+
 // NewParams creates a new ordered map.
 func NewParams() *Params {
 	p := Params{}
@@ -74,6 +77,9 @@ func (p *Params) Names() []string {
 // marshalSFV serializes as defined in
 // https://httpwg.org/specs/rfc8941.html#ser-params.
 func (p *Params) marshalSFV(b *strings.Builder) error {
+	if p == nil {
+		return ErrMissingParameters
+	}
 	for _, k := range p.names {
 		if err := b.WriteByte(';'); err != nil {
 			return err
