@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestTokenMarshalSFV(t *testing.T) {
+func TestMarshalToken(t *testing.T) {
 	t.Parallel()
 
 	data := []struct {

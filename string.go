@@ -2,7 +2,6 @@ package httpsfv
 
 import (
 	"errors"
-	"io"
 	"strings"
 	"unicode"
 )
@@ -10,9 +9,9 @@ import (
 // ErrInvalidStringFormat is returned when a string format is invalid.
 var ErrInvalidStringFormat = errors.New("invalid string format")
 
-// marshalSFV serializes as defined in
-// https://httpwg.org/specs/rfc8941.html#ser-string.
-func marshalString(b io.ByteWriter, s string) error {
+// marshalString serializes as defined in
+// https://httpwg.org/specs/rfc9651.html#ser-string.
+func marshalString(b *strings.Builder, s string) error {
 	if err := b.WriteByte('"'); err != nil {
 		return err
 	}
@@ -42,7 +41,7 @@ func marshalString(b io.ByteWriter, s string) error {
 }
 
 // parseString parses as defined in
-// https://httpwg.org/specs/rfc8941.html#parse-string.
+// https://httpwg.org/specs/rfc9651.html#parse-string.
 func parseString(s *scanner) (string, error) {
 	if s.eof() || s.data[s.off] != '"' {
 		return "", &UnmarshalError{s.off, ErrInvalidStringFormat}

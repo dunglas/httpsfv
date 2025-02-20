@@ -24,12 +24,12 @@ func isExtendedTchar(c byte) bool {
 var ErrInvalidTokenFormat = errors.New("invalid token format")
 
 // Token represents a token as defined in
-// https://httpwg.org/specs/rfc8941.html#token.
+// https://httpwg.org/specs/rfc9651.html#token.
 // A specific type is used to distinguish tokens from strings.
 type Token string
 
 // marshalSFV serializes as defined in
-// https://httpwg.org/specs/rfc8941.html#ser-token.
+// https://httpwg.org/specs/rfc9651.html#ser-token.
 func (t Token) marshalSFV(b io.StringWriter) error {
 	if len(t) == 0 {
 		return fmt.Errorf("a token cannot be empty: %w", ErrInvalidTokenFormat)
@@ -51,7 +51,7 @@ func (t Token) marshalSFV(b io.StringWriter) error {
 }
 
 // parseToken parses as defined in
-// https://httpwg.org/specs/rfc8941.html#parse-token.
+// https://httpwg.org/specs/rfc9651.html#parse-token.
 func parseToken(s *scanner) (Token, error) {
 	if s.eof() || (!isAlpha(s.data[s.off]) && s.data[s.off] != '*') {
 		return "", &UnmarshalError{s.off, ErrInvalidTokenFormat}

@@ -5,15 +5,16 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 )
 
 // ErrInvalidBareItem is returned when a bare item is invalid.
 var ErrInvalidBareItem = errors.New(
-	"invalid bare item type (allowed types are bool, string, int64, float64, []byte and Token)",
+	"invalid bare item type (allowed types are bool, string, int64, float64, []byte, time.Time and Token)",
 )
 
 // assertBareItem asserts that v is a valid bare item
-// according to https://httpwg.org/specs/rfc8941.html#item.
+// according to https://httpwg.org/specs/rfc9651.html#item.
 //
 // v can be either:
 //
@@ -23,6 +24,8 @@ var ErrInvalidBareItem = errors.New(
 // * a token (Section 3.3.4.)
 // * a byte sequence (Section 3.3.5.)
 // * a boolean (Section 3.3.6.)
+// * a date (Section 3.3.7.)
+// * a display string (Section 3.3.8.)
 func assertBareItem(v interface{}) {
 	switch v.(type) {
 	case bool,
@@ -40,7 +43,9 @@ func assertBareItem(v interface{}) {
 		float32,
 		float64,
 		[]byte,
-		Token:
+		time.Time,
+		Token,
+		DisplayString:
 		return
 	default:
 		panic(fmt.Errorf("%w: got %s", ErrInvalidBareItem, reflect.TypeOf(v)))
@@ -48,7 +53,7 @@ func assertBareItem(v interface{}) {
 }
 
 // marshalBareItem serializes as defined in
-// https://httpwg.org/specs/rfc8941.html#ser-bare-item.
+// https://httpwg.org/specs/rfc9651.html#ser-bare-item.
 func marshalBareItem(b *strings.Builder, v interface{}) error {
 	switch v := v.(type) {
 	case bool:
@@ -66,7 +71,11 @@ func marshalBareItem(b *strings.Builder, v interface{}) error {
 		return marshalDecimal(b, v.(float64))
 	case []byte:
 		return marshalBinary(b, v)
+	case time.Time:
+		return marshalDate(b, v)
 	case Token:
+		return v.marshalSFV(b)
+	case DisplayString:
 		return v.marshalSFV(b)
 	default:
 		panic(ErrInvalidBareItem)
@@ -74,7 +83,7 @@ func marshalBareItem(b *strings.Builder, v interface{}) error {
 }
 
 // parseBareItem parses as defined in
-// https://httpwg.org/specs/rfc8941.html#parse-bare-item.
+// https://httpwg.org/specs/rfc9651.html#parse-bare-item.
 func parseBareItem(s *scanner) (interface{}, error) {
 	if s.eof() {
 		return nil, &UnmarshalError{s.off, ErrUnexpectedEndOfString}
@@ -92,6 +101,10 @@ func parseBareItem(s *scanner) (interface{}, error) {
 		return parseBinary(s)
 	case '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
 		return parseNumber(s)
+	case '@':
+		return parseDate(s)
+	case '%':
+		return parseDisplayString(s)
 	default:
 		if isAlpha(c) {
 			return parseToken(s)

@@ -3,21 +3,19 @@ package httpsfv
 import (
 	"strings"
 	"testing"
+	"time"
 )
 
-func TestMarshalKey(t *testing.T) {
+func TestMarshalDate(t *testing.T) {
 	t.Parallel()
 
 	data := []struct {
-		in       string
+		in       time.Time
 		expected string
 		valid    bool
 	}{
-		{"f1oo", "f1oo", true},
-		{"*foo0", "*foo0", true},
-		{"", "", false},
-		{"1foo", "", false},
-		{"fOo", "", false},
+		{time.Unix(1659578233, 0), "@1659578233", true},
+		{time.Unix(9999999999999999, 0), "@", false},
 	}
 
 	var b strings.Builder
@@ -25,7 +23,7 @@ func TestMarshalKey(t *testing.T) {
 	for _, d := range data {
 		b.Reset()
 
-		err := marshalKey(&b, d.in)
+		err := marshalDate(&b, d.in)
 		if d.valid && err != nil {
 			t.Errorf("error not expected for %v, got %v", d.in, err)
 		} else if !d.valid && err == nil {
@@ -38,32 +36,28 @@ func TestMarshalKey(t *testing.T) {
 	}
 }
 
-func TestParseKey(t *testing.T) {
+func TestParseDate(t *testing.T) {
 	t.Parallel()
 
 	data := []struct {
-		in       string
-		expected string
-		err      bool
+		in  string
+		out time.Time
+		err bool
 	}{
-		{"t", "t", false},
-		{"tok", "tok", false},
-		{"*k-.*", "*k-.*", false},
-		{"k=", "k", false},
-		{"", "", true},
-		{"é", "", true},
+		{"@1659578233", time.Unix(1659578233, 0), false},
+		{"invalid", time.Time{}, true},
 	}
 
 	for _, d := range data {
 		s := &scanner{data: d.in}
 
-		i, err := parseKey(s)
+		i, err := parseDate(s)
 		if d.err && err == nil {
-			t.Errorf("parseKey(%s): error expected", d.in)
+			t.Errorf("parse%s): error expected", d.in)
 		}
 
-		if !d.err && d.expected != i {
-			t.Errorf("parseKey(%s) = %v, %v; %v, <nil> expected", d.in, i, err, d.expected)
+		if !d.err && d.out != i {
+			t.Errorf("parse%s) = %v, %v; %v, <nil> expected", d.in, i, err, d.out)
 		}
 	}
 }

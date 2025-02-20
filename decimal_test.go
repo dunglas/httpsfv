@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestDecimalMarshalSFV(t *testing.T) {
+func TestMarshalDecimal(t *testing.T) {
 	t.Parallel()
 
 	data := []struct {

@@ -24,7 +24,7 @@ func isKeyChar(c byte) bool {
 }
 
 // checkKey checks if the given value is a valid parameter key according to
-// https://httpwg.org/specs/rfc8941.html#param.
+// https://httpwg.org/specs/rfc9651.html#param.
 func checkKey(k string) error {
 	if len(k) == 0 {
 		return fmt.Errorf("a key cannot be empty: %w", ErrInvalidKeyFormat)
@@ -44,7 +44,7 @@ func checkKey(k string) error {
 }
 
 // marshalKey serializes as defined in
-// https://httpwg.org/specs/rfc8941.html#ser-key.
+// https://httpwg.org/specs/rfc9651.html#ser-key.
 func marshalKey(b io.StringWriter, k string) error {
 	if err := checkKey(k); err != nil {
 		return err
@@ -56,7 +56,7 @@ func marshalKey(b io.StringWriter, k string) error {
 }
 
 // parseKey parses as defined in
-// https://httpwg.org/specs/rfc8941.html#parse-key.
+// https://httpwg.org/specs/rfc9651.html#parse-key.
 func parseKey(s *scanner) (string, error) {
 	if s.eof() {
 		return "", &UnmarshalError{s.off, ErrInvalidKeyFormat}

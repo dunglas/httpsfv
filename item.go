@@ -5,7 +5,7 @@ import (
 )
 
 // Item is a bare value and associated parameters.
-// See https://httpwg.org/specs/rfc8941.html#item.
+// See https://httpwg.org/specs/rfc9651.html#item.
 type Item struct {
 	Value  interface{}
 	Params *Params
@@ -22,7 +22,7 @@ func (i Item) member() {
 }
 
 // marshalSFV serializes as defined in
-// https://httpwg.org/specs/rfc8941.html#ser-item.
+// https://httpwg.org/specs/rfc9651.html#ser-item.
 func (i Item) marshalSFV(b *strings.Builder) error {
 	if i.Value == nil {
 		return ErrInvalidBareItem
@@ -36,7 +36,7 @@ func (i Item) marshalSFV(b *strings.Builder) error {
 }
 
 // UnmarshalItem parses an item as defined in
-// https://httpwg.org/specs/rfc8941.html#parse-item.
+// https://httpwg.org/specs/rfc9651.html#parse-item.
 func UnmarshalItem(v []string) (Item, error) {
 	s := &scanner{
 		data: strings.Join(v, ","),

@@ -1,6 +1,9 @@
 package httpsfv
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestMarshal(t *testing.T) {
 	t.Parallel()
@@ -16,8 +19,11 @@ func TestMarshal(t *testing.T) {
 	tok.Params.Add("a", "b")
 	d.Add("tok", tok)
 
-	if res, _ := Marshal(d); res != `i=22.1;foo;bar=baz, tok=foo;a="b"` {
-		t.Errorf("marshal: bad result")
+	date := NewItem(time.Date(1988, 21, 01, 0, 0, 0, 0, time.Local))
+	d.Add("d", date)
+
+	if res, _ := Marshal(d); res != `i=22.1;foo;bar=baz, tok=foo;a="b", d=@620604000` {
+		t.Errorf("marshal: bad result: %q", res)
 	}
 }
 

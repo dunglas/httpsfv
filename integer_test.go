@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestIntegerMarshalSFV(t *testing.T) {
+func TestMarshalInteger(t *testing.T) {
 	t.Parallel()
 
 	data := []struct {

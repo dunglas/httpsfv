@@ -10,11 +10,11 @@ var ErrInvalidListFormat = errors.New("invalid list format")
 
 // List contains items an inner lists.
 //
-// See https://httpwg.org/specs/rfc8941.html#list
+// See https://httpwg.org/specs/rfc9651.html#list
 type List []Member
 
 // marshalSFV serializes as defined in
-// https://httpwg.org/specs/rfc8941.html#ser-list.
+// https://httpwg.org/specs/rfc9651.html#ser-list.
 func (l List) marshalSFV(b *strings.Builder) error {
 	s := len(l)
 	for i := 0; i < s; i++ {
@@ -33,7 +33,7 @@ func (l List) marshalSFV(b *strings.Builder) error {
 }
 
 // UnmarshalList parses a list as defined in
-// https://httpwg.org/specs/rfc8941.html#parse-list.
+// https://httpwg.org/specs/rfc9651.html#parse-list.
 func UnmarshalList(v []string) (List, error) {
 	s := &scanner{
 		data: strings.Join(v, ","),
@@ -50,7 +50,7 @@ func UnmarshalList(v []string) (List, error) {
 }
 
 // parseList parses as defined in
-// https://httpwg.org/specs/rfc8941.html#parse-list.
+// https://httpwg.org/specs/rfc9651.html#parse-list.
 func parseList(s *scanner) (List, error) {
 	var l List
 
@@ -85,7 +85,7 @@ func parseList(s *scanner) (List, error) {
 }
 
 // parseItemOrInnerList parses as defined in
-// https://httpwg.org/specs/rfc8941.html#parse-item-or-list.
+// https://httpwg.org/specs/rfc9651.html#parse-item-or-list.
 func parseItemOrInnerList(s *scanner) (Member, error) {
 	if s.eof() {
 		return nil, &UnmarshalError{s.off, ErrInvalidInnerListFormat}

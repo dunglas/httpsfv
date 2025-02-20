@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestList(t *testing.T) {
+func TestMarshalList(t *testing.T) {
 	t.Parallel()
 
 	params := NewParams()
