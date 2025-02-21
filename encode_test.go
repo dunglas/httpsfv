@@ -19,10 +19,10 @@ func TestMarshal(t *testing.T) {
 	tok.Params.Add("a", "b")
 	d.Add("tok", tok)
 
-	date := NewItem(time.Date(1988, 21, 01, 0, 0, 0, 0, time.Local))
+	date := NewItem(time.Date(1988, 21, 01, 0, 0, 0, 0, time.UTC))
 	d.Add("d", date)
 
-	if res, _ := Marshal(d); res != `i=22.1;foo;bar=baz, tok=foo;a="b", d=@620604000` {
+	if res, _ := Marshal(d); res != `i=22.1;foo;bar=baz, tok=foo;a="b", d=@620611200` {
 		t.Errorf("marshal: bad result: %q", res)
 	}
 }
