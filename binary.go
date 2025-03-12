@@ -10,7 +10,7 @@ import (
 var ErrInvalidBinaryFormat = errors.New("invalid binary format")
 
 // marshalBinary serializes as defined in
-// https://httpwg.org/specs/rfc8941.html#ser-binary.
+// https://httpwg.org/specs/rfc9651.html#ser-binary.
 func marshalBinary(b *strings.Builder, bs []byte) error {
 	if err := b.WriteByte(':'); err != nil {
 		return err
@@ -27,7 +27,7 @@ func marshalBinary(b *strings.Builder, bs []byte) error {
 }
 
 // parseBinary parses as defined in
-// https://httpwg.org/specs/rfc8941.html#parse-binary.
+// https://httpwg.org/specs/rfc9651.html#parse-binary.
 func parseBinary(s *scanner) ([]byte, error) {
 	if s.eof() || s.data[s.off] != ':' {
 		return nil, &UnmarshalError{s.off, ErrInvalidBinaryFormat}

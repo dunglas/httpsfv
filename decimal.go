@@ -14,7 +14,7 @@ const maxDecDigit = 3
 var ErrInvalidDecimal = errors.New("the integer portion is larger than 12 digits: invalid decimal")
 
 // marshalDecimal serializes as defined in
-// https://httpwg.org/specs/rfc8941.html#ser-decimal.
+// https://httpwg.org/specs/rfc9651.html#ser-decimal.
 //
 // TODO(dunglas): add support for decimal float type when one will be available
 // (https://github.com/golang/go/issues/19787)

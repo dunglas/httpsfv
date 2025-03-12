@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestBinary(t *testing.T) {
+func TestMarshalBinary(t *testing.T) {
 	t.Parallel()
 
 	var bd strings.Builder

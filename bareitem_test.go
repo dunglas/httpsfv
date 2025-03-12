@@ -23,6 +23,7 @@ func TestParseBareItem(t *testing.T) {
 		{"abc", Token("abc"), false},
 		{"*abc", Token("*abc"), false},
 		{":YWJj:", []byte("abc"), false},
+		{"@1659578233", time.Unix(1659578233, 0), false},
 		{"", nil, true},
 		{"~", nil, true},
 	}

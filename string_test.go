@@ -6,7 +6,7 @@ import (
 	"unicode"
 )
 
-func TestStringMarshalSFV(t *testing.T) {
+func TestMarshalString(t *testing.T) {
 	t.Parallel()
 
 	data := []struct {
@@ -69,11 +69,11 @@ func TestParseString(t *testing.T) {
 
 		i, err := parseString(s)
 		if d.err && err == nil {
-			t.Errorf("parse%s): error expected", d.in)
+			t.Errorf("parseString(%s): error expected", d.in)
 		}
 
 		if !d.err && d.out != i {
-			t.Errorf("parse%s) = %v, %v; %v, <nil> expected", d.in, i, err, d.out)
+			t.Errorf("parseString(%s) = %v, %v; %v, <nil> expected", d.in, i, err, d.out)
 		}
 	}
 }

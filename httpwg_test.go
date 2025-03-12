@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 )
 
 const (
@@ -52,6 +53,12 @@ func valToBareItem(e interface{}) interface{} {
 		return bi
 	case "token":
 		return Token(bareItem["value"].(string))
+	case "date":
+		u, _ := bareItem["value"].(json.Number).Int64()
+
+		return time.Unix(u, 0)
+	case "displaystring":
+		return DisplayString(bareItem["value"].(string))
 	default:
 	}
 
@@ -135,8 +142,6 @@ func valToDictionary(e interface{}) *Dictionary {
 }
 
 func TestOfficialTestSuiteParsing(t *testing.T) {
-	t.Parallel()
-
 	const dir = "structured-field-tests/"
 	f, _ := os.Open(dir)
 	files, _ := f.Readdir(-1)
@@ -155,40 +160,42 @@ func TestOfficialTestSuiteParsing(t *testing.T) {
 		_ = dec.Decode(&tests)
 
 		for _, te := range tests {
-			var (
-				expected, got StructuredFieldValue
-				err           error
-			)
+			t.Run(n+"/"+te.Name, func(t *testing.T) {
+				var (
+					expected, got StructuredFieldValue
+					err           error
+				)
 
-			switch te.HeaderType {
-			case ITEM:
-				expected = valToItem(te.Expected)
-				got, err = UnmarshalItem(te.Raw)
-			case LIST:
-				expected = valToList(te.Expected)
-				got, err = UnmarshalList(te.Raw)
-			case DICTIONARY:
-				expected = valToDictionary(te.Expected)
-				got, err = UnmarshalDictionary(te.Raw)
-			default:
-				panic("unknown header type")
-			}
+				switch te.HeaderType {
+				case ITEM:
+					expected = valToItem(te.Expected)
+					got, err = UnmarshalItem(te.Raw)
+				case LIST:
+					expected = valToList(te.Expected)
+					got, err = UnmarshalList(te.Raw)
+				case DICTIONARY:
+					expected = valToDictionary(te.Expected)
+					got, err = UnmarshalDictionary(te.Raw)
+				default:
+					panic("unknown header type")
+				}
 
-			if te.MustFail && err == nil {
-				t.Errorf("%s: %s: must fail", n, te.Name)
+				if te.MustFail && err == nil {
+					t.Errorf("%s: %s: must fail", n, te.Name)
 
-				continue
-			}
+					return
+				}
 
-			if (!te.MustFail && !te.CanFail) && err != nil {
-				t.Errorf("%s: %s: must not fail, got error %s", n, te.Name, err)
+				if (!te.MustFail && !te.CanFail) && err != nil {
+					t.Errorf("%s: %s: must not fail, got error %s", n, te.Name, err)
 
-				continue
-			}
+					return
+				}
 
-			if err == nil && !reflect.DeepEqual(expected, got) {
-				t.Errorf("%s: %s: %#v expected, got %#v", n, te.Name, expected, got)
-			}
+				if err == nil && !reflect.DeepEqual(expected, got) {
+					t.Errorf("%s: %s: %#v expected, got %#v", n, te.Name, expected, got)
+				}
+			})
 		}
 	}
 }

@@ -50,7 +50,7 @@ func TestMarshalItem(t *testing.T) {
 	}
 }
 
-func TestItemParamsMarshalSFV(t *testing.T) {
+func TestParseItemParamsMarshalSFV(t *testing.T) {
 	t.Parallel()
 
 	i := NewItem(Token("bar"))

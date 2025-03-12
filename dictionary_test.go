@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestDictionnary(t *testing.T) {
+func TestMarshalDictionnary(t *testing.T) {
 	t.Parallel()
 
 	dict := NewDictionary()

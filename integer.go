@@ -22,8 +22,8 @@ const (
 	typeDecimal
 )
 
-// marshalInteger serialized as defined in
-// https://httpwg.org/specs/rfc8941.html#integer.
+// marshalInteger serializes as defined in
+// https://httpwg.org/specs/rfc9651.html#integer.
 func marshalInteger(b io.StringWriter, i int64) error {
 	if i < -999999999999999 || i > 999999999999999 {
 		return ErrNumberOutOfRange
@@ -35,7 +35,7 @@ func marshalInteger(b io.StringWriter, i int64) error {
 }
 
 // parseNumber parses as defined in
-// https://httpwg.org/specs/rfc8941.html#parse-number.
+// https://httpwg.org/specs/rfc9651.html#parse-number.
 func parseNumber(s *scanner) (interface{}, error) {
 	neg := isNeg(s)
 	if neg && s.eof() {
@@ -51,7 +51,7 @@ func parseNumber(s *scanner) (interface{}, error) {
 
 	var (
 		decSepOff int
-		t         int = typeInteger
+		t         = typeInteger
 	)
 
 	for s.off < len(s.data) {

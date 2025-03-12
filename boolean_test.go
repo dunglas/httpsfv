@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestBooleanMarshalSFV(t *testing.T) {
+func TestMarshalBoolean(t *testing.T) {
 	t.Parallel()
 
 	var b strings.Builder
