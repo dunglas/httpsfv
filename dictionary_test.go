@@ -96,6 +96,9 @@ func TestUnmarshalDictionary(t *testing.T) {
 	c.Params.Add("foo", Token("bar"))
 	d1.Add("c", c)
 
+	d2 := NewDictionary()
+	d2.Add("aa", NewItem(DisplayString("")))
+
 	data := []struct {
 		in       []string
 		expected *Dictionary
@@ -110,6 +113,9 @@ func TestUnmarshalDictionary(t *testing.T) {
 		{[]string{`foo;é`}, nil, true},
 		{[]string{`f="foo" é`}, nil, true},
 		{[]string{`f="foo",`}, nil, true},
+		{[]string{`aa=%""`}, d2, false},
+		{[]string{`aa=%"`}, nil, true},
+		{[]string{`aa=%`}, nil, true},
 	}
 
 	for _, d := range data {

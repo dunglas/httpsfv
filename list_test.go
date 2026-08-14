@@ -121,6 +121,13 @@ func FuzzUnmarshalList(f *testing.F) {
 		`(""`,
 		`(`,
 		"1.9",
+		`%""`,
+		`%"K%c3%a9vin"`,
+		`%"foo`,
+		`%`,
+		`@`,
+		`@1659578233`,
+		`@-`,
 	}
 
 	for _, t := range testCases {

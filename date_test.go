@@ -46,6 +46,8 @@ func TestParseDate(t *testing.T) {
 	}{
 		{"@1659578233", time.Unix(1659578233, 0), false},
 		{"invalid", time.Time{}, true},
+		{"@", time.Time{}, true},
+		{"@-", time.Time{}, true},
 	}
 
 	for _, d := range data {

@@ -46,10 +46,16 @@ func TestParseDisplayString(t *testing.T) {
 	}{
 		{`%"foo"`, "foo", false},
 		{`%"K%c3%a9vin"`, "Kévin", false},
-		{`%"K%00vin"`, "", true},
+		{`%"K%00vin"`, "K\x00vin", false},
+		{`%""`, "", false},
 		{`"K%e9vin"`, "", true},
 		{`%K%e9vin"`, "", true},
 		{`%"K%e9vin`, "", true},
+		{`%"K%0gvin"`, "", true},
+		{`%"K%g0vin"`, "", true},
+		{`%"K%C3%A9vin"`, "", true},
+		{`%`, "", true},
+		{`%"`, "", true},
 	}
 
 	for _, d := range data {
