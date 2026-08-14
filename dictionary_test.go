@@ -129,3 +129,45 @@ func TestUnmarshalDictionary(t *testing.T) {
 		}
 	}
 }
+
+func FuzzUnmarshalDictionary(f *testing.F) {
+	testCases := []string{
+		"",
+		"a=?0, b, c; foo=bar",
+		"a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid",
+		`aa=%""`,
+		`aa=%"K%c3%a9vin"`,
+		"a=@1659578233",
+		"a=@",
+		"a=",
+		"é",
+		`foo="é"`,
+		"a=1.9",
+		"a=:AAE=:",
+	}
+
+	for _, t := range testCases {
+		f.Add(t)
+	}
+
+	f.Fuzz(func(t *testing.T, b string) {
+		unmarshaled, err := UnmarshalDictionary([]string{b})
+		if err != nil {
+			return
+		}
+
+		reMarshaled, err := Marshal(unmarshaled)
+		if err != nil {
+			t.Errorf("Unexpected marshaling error %q for %q, %#v", err, b, unmarshaled)
+		}
+
+		reUnmarshaled, err := UnmarshalDictionary([]string{reMarshaled})
+		if err != nil {
+			t.Errorf("Unexpected remarshaling error %q for %q; original %q", err, reMarshaled, b)
+		}
+
+		if !reflect.DeepEqual(unmarshaled, reUnmarshaled) {
+			t.Errorf("Unmarshaled and re-unmarshaled doesn't match: %#v; %#v", unmarshaled, reUnmarshaled)
+		}
+	})
+}
