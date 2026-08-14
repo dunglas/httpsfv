@@ -30,10 +30,12 @@ func marshalDecimal(b io.StringWriter, d float64) error {
 
 	s := strings.TrimRight(strconv.FormatFloat(rounded, 'f', 3, 64), "0")
 	// Ensure at least one digit after the decimal point.
-	if s[len(s)-1] == '.' {
+	if strings.HasSuffix(s, ".") {
 		s += "0"
 	}
+
 	_, err := b.WriteString(s)
+
 	return err
 }
 
