@@ -79,7 +79,7 @@ func TestUnmarshalItem(t *testing.T) {
 	}{
 		{[]string{"?1;foo;*bar=tok"}, i1, false},
 		{[]string{"  ?1;foo;*bar=tok  "}, i1, false},
-		{[]string{`"foo`, `bar"`}, NewItem("foo,bar"), false},
+		{[]string{`"foo`, `bar"`}, NewItem("foo, bar"), false},
 		{[]string{"é", ""}, Item{}, true},
 		{[]string{"tok;é"}, Item{}, true},
 		{[]string{"  ?1;foo;*bar=tok  é"}, Item{}, true},

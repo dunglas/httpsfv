@@ -104,7 +104,7 @@ func (d *Dictionary) marshalSFV(b *strings.Builder) error {
 // https://httpwg.org/specs/rfc9651.html#parse-dictionary.
 func UnmarshalDictionary(v []string) (*Dictionary, error) {
 	s := &scanner{
-		data: strings.Join(v, ","),
+		data: strings.Join(v, ", "),
 	}
 
 	s.scanWhileSp()
