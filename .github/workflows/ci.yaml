@@ -2,22 +2,32 @@ name: CI
 
 on:
   push:
+    branches:
+      - main
   pull_request:
 
-env:
-  GO111MODULE: 'on'
+permissions:
+  contents: read
+
+# Superseded pull request runs are worthless; main runs still upload coverage.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-    - name: Check out code
-      uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Set up Go
-      uses: actions/setup-go@v5
-    - name: Lint Go Code
-      uses: golangci/golangci-lint-action@v6
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      with:
+        go-version: stable
+        cache: false # golangci-lint-action manages its own cache
+    - name: Lint Go code
+      uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
 
   test:
     name: Test
@@ -28,15 +38,17 @@ jobs:
         go-version: ['stable', 'oldstable']
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        submodules: true
     - name: Set up Go
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
       with:
         go-version: ${{ matrix.go-version }}
     - name: Test
-      run: go test -race ${{ matrix.go-version == 'stable' && '-covermode atomic -coverprofile=profile.cov' || ''}}
+      run: go test -race ${{ matrix.go-version == 'stable' && '-covermode atomic -coverprofile=profile.cov' || '' }}
     - name: Upload coverage results
       if: matrix.go-version == 'stable'
-      uses: shogo82148/actions-goveralls@v1
+      uses: shogo82148/actions-goveralls@77a1912dca42260ee3e97f61bd13ea7ef40baa93 # v1.11.2
       with:
         path-to-profile: profile.cov
