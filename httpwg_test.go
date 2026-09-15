@@ -141,25 +141,68 @@ func valToDictionary(e interface{}) *Dictionary {
 	return d
 }
 
+// listTestFiles returns the JSON test suite files in dir.
+func listTestFiles(tb testing.TB, dir string) []string {
+	tb.Helper()
+
+	f, err := os.Open(dir)
+	if err != nil {
+		tb.Fatalf("%s: %s (is the structured-field-tests submodule checked out?)", dir, err)
+	}
+
+	defer func() { _ = f.Close() }()
+
+	entries, err := f.Readdir(-1)
+	if err != nil {
+		tb.Fatalf("%s: %s", dir, err)
+	}
+
+	var names []string
+
+	for _, fi := range entries {
+		if strings.HasSuffix(fi.Name(), ".json") {
+			names = append(names, fi.Name())
+		}
+	}
+
+	if len(names) == 0 {
+		tb.Fatalf("%s: no JSON test file found (is the structured-field-tests submodule checked out?)", dir)
+	}
+
+	return names
+}
+
+// loadTests decodes the test cases contained in the given test suite file.
+func loadTests(tb testing.TB, path string) []test {
+	tb.Helper()
+
+	file, err := os.Open(path)
+	if err != nil {
+		tb.Fatalf("%s: %s (is the structured-field-tests submodule checked out?)", path, err)
+	}
+
+	defer func() { _ = file.Close() }()
+
+	dec := json.NewDecoder(file)
+	dec.UseNumber()
+
+	var tests []test
+	if err := dec.Decode(&tests); err != nil {
+		tb.Fatalf("%s: %s", path, err)
+	}
+
+	if len(tests) == 0 {
+		tb.Fatalf("%s: no test case found", path)
+	}
+
+	return tests
+}
+
 func TestOfficialTestSuiteParsing(t *testing.T) {
 	const dir = "structured-field-tests/"
-	f, _ := os.Open(dir)
-	files, _ := f.Readdir(-1)
 
-	for _, fi := range files {
-		n := fi.Name()
-		if !strings.HasSuffix(n, ".json") {
-			continue
-		}
-
-		file, _ := os.Open(dir + n)
-		dec := json.NewDecoder(file)
-		dec.UseNumber()
-
-		var tests []test
-		_ = dec.Decode(&tests)
-
-		for _, te := range tests {
+	for _, n := range listTestFiles(t, dir) {
+		for _, te := range loadTests(t, dir+n) {
 			t.Run(n+"/"+te.Name, func(t *testing.T) {
 				var (
 					expected, got StructuredFieldValue
@@ -201,11 +244,7 @@ func TestOfficialTestSuiteParsing(t *testing.T) {
 }
 
 func BenchmarkParsingOfficialExamples(b *testing.B) {
-	file, _ := os.Open("structured-field-tests/examples.json")
-	dec := json.NewDecoder(file)
-
-	var tests []test
-	_ = dec.Decode(&tests)
+	tests := loadTests(b, "structured-field-tests/examples.json")
 
 	for n := 0; n < b.N; n++ {
 		for _, te := range tests {
@@ -222,12 +261,7 @@ func BenchmarkParsingOfficialExamples(b *testing.B) {
 }
 
 func BenchmarkSerializingOfficialExamples(b *testing.B) {
-	file, _ := os.Open("structured-field-tests/examples.json")
-	dec := json.NewDecoder(file)
-	dec.UseNumber()
-
-	var tests []test
-	_ = dec.Decode(&tests)
+	tests := loadTests(b, "structured-field-tests/examples.json")
 
 	var sfv []StructuredFieldValue
 
@@ -258,23 +292,8 @@ func TestOfficialTestSuiteSerialization(t *testing.T) {
 
 	const dir = "structured-field-tests/serialisation-tests/"
 
-	f, _ := os.Open(dir)
-	files, _ := f.Readdir(-1)
-
-	for _, fi := range files {
-		n := fi.Name()
-		if !strings.HasSuffix(n, ".json") {
-			continue
-		}
-
-		file, _ := os.Open(dir + n)
-		dec := json.NewDecoder(file)
-		dec.UseNumber()
-
-		var tests []test
-		_ = dec.Decode(&tests)
-
-		for _, te := range tests {
+	for _, n := range listTestFiles(t, dir) {
+		for _, te := range loadTests(t, dir+n) {
 			var sfv StructuredFieldValue
 
 			switch te.HeaderType {
