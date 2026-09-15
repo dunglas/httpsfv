@@ -8,8 +8,8 @@ import (
 // Dictionary is an ordered map of name-value pairs.
 // See https://httpwg.org/specs/rfc9651.html#dictionary
 // Values can be:
-//   * Item (Section 3.3.)
-//   * Inner List (Section 3.1.1.)
+//   - Item (Section 3.3.)
+//   - Inner List (Section 3.1.1.)
 type Dictionary struct {
 	names  []string
 	values map[string]Member
