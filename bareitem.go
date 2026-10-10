@@ -65,8 +65,12 @@ func marshalBareItem(b *strings.Builder, v interface{}) error {
 	case int, int8, int16, int32:
 		return marshalInteger(b, reflect.ValueOf(v).Int())
 	case uint, uint8, uint16, uint32, uint64:
-		// Casting an uint64 to an int64 is possible because the maximum allowed value is 999,999,999,999,999
-		return marshalInteger(b, int64(reflect.ValueOf(v).Uint()))
+		u := reflect.ValueOf(v).Uint()
+		if u > 999999999999999 {
+			return ErrNumberOutOfRange
+		}
+
+		return marshalInteger(b, int64(u))
 	case float32, float64:
 		return marshalDecimal(b, v.(float64))
 	case []byte:
