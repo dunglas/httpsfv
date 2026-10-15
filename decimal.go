@@ -24,7 +24,7 @@ func marshalDecimal(b io.StringWriter, d float64) error {
 	rounded := math.RoundToEven(d/TH) * TH
 	i, _ := math.Modf(rounded)
 
-	if i < -999999999999 || i > 999999999999 {
+	if math.IsNaN(d) || i < -999999999999 || i > 999999999999 {
 		return ErrInvalidDecimal
 	}
 
