@@ -1,10 +1,73 @@
 package httpsfv
 
 import (
+	"errors"
+	"fmt"
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
 )
+
+func TestMarshalUnsignedInteger(t *testing.T) {
+	t.Parallel()
+
+	const maxInteger = uint64(999999999999999)
+	type testCase struct {
+		value interface{}
+		want  string
+		err   error
+	}
+	cases := []testCase{
+		{uint(0), "0", nil},
+		{uint8(255), "255", nil},
+		{uint16(65535), "65535", nil},
+		{uint32(4294967295), "4294967295", nil},
+		{uint64(0), "0", nil},
+		{maxInteger, "999999999999999", nil},
+		{maxInteger + 1, "", ErrNumberOutOfRange},
+		{uint64(1<<63 - 1), "", ErrNumberOutOfRange},
+		{uint64(1 << 63), "", ErrNumberOutOfRange},
+		{^uint64(0) - maxInteger, "", ErrNumberOutOfRange},
+		{^uint64(0) - maxInteger + 1, "", ErrNumberOutOfRange},
+		{^uint64(0) - 1, "", ErrNumberOutOfRange},
+		{^uint64(0), "", ErrNumberOutOfRange},
+	}
+	if strconv.IntSize == 64 {
+		cases = append(cases, testCase{^uint(0), "", ErrNumberOutOfRange})
+	} else {
+		cases = append(cases, testCase{^uint(0), "4294967295", nil})
+	}
+
+	for _, c := range cases {
+		t.Run(fmt.Sprintf("%T/%v", c.value, c.value), func(t *testing.T) {
+			got, err := Marshal(NewItem(c.value))
+			if !errors.Is(err, c.err) || got != c.want {
+				t.Errorf("Marshal() = %q, %v; want %q, %v", got, err, c.want, c.err)
+			}
+		})
+	}
+}
+
+func TestMarshalUnsignedIntegerOverflow(t *testing.T) {
+	t.Parallel()
+
+	item := NewItem(^uint64(0))
+	withParams := NewItem(Token("token"))
+	withParams.Params.Add("number", ^uint64(0))
+	dictionary := NewDictionary()
+	dictionary.Add("number", item)
+	innerList := InnerList{Items: []Item{NewItem(42), item}, Params: NewParams()}
+
+	for _, value := range []StructuredFieldValue{item, withParams, List{NewItem(42), item}, dictionary, innerList} {
+		t.Run(fmt.Sprintf("%T", value), func(t *testing.T) {
+			got, err := Marshal(value)
+			if !errors.Is(err, ErrNumberOutOfRange) || got != "" {
+				t.Errorf("Marshal() = %q, %v; want empty output and ErrNumberOutOfRange", got, err)
+			}
+		})
+	}
+}
 
 func TestMarshalItem(t *testing.T) {
 	t.Parallel()
