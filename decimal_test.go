@@ -1,6 +1,7 @@
 package httpsfv
 
 import (
+	"math"
 	"strings"
 	"testing"
 )
@@ -24,6 +25,7 @@ func TestMarshalDecimal(t *testing.T) {
 		{-9999999999999.0, "", false},
 		{9999999999999.0, "", false},
 		{1.9, "1.9", true},
+		{math.NaN(), "", false},
 	}
 
 	var b strings.Builder
