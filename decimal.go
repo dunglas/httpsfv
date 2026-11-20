@@ -16,25 +16,56 @@ var ErrInvalidDecimal = errors.New("the integer portion is larger than 12 digits
 // marshalDecimal serializes as defined in
 // https://httpwg.org/specs/rfc9651.html#ser-decimal.
 //
+// Rounding is done on the shortest decimal form of d, not on its binary
+// value: 0.5015 is stored as 0.50149999..., but it must serialize as 0.502.
+//
 // TODO(dunglas): add support for decimal float type when one will be available
 // (https://github.com/golang/go/issues/19787)
 func marshalDecimal(b io.StringWriter, d float64) error {
-	const TH = 0.001
-
-	rounded := math.RoundToEven(d/TH) * TH
-	i, _ := math.Modf(rounded)
-
-	if i < -999999999999 || i > 999999999999 {
+	if math.IsNaN(d) || math.IsInf(d, 0) {
 		return ErrInvalidDecimal
 	}
 
-	s := strings.TrimRight(strconv.FormatFloat(rounded, 'f', 3, 64), "0")
-	// Ensure at least one digit after the decimal point.
-	if strings.HasSuffix(s, ".") {
-		s += "0"
+	s := strconv.FormatFloat(math.Abs(d), 'f', -1, 64)
+	intPart, frac, _ := strings.Cut(s, ".")
+
+	if len(frac) > maxDecDigit {
+		digits := []byte(intPart + frac[:maxDecDigit])
+		rest := frac[maxDecDigit:]
+
+		// Round half to even.
+		if rest[0] > '5' || (rest[0] == '5' && (strings.TrimRight(rest[1:], "0") != "" || (digits[len(digits)-1]-'0')%2 == 1)) {
+			i := len(digits) - 1
+			for ; i >= 0 && digits[i] == '9'; i-- {
+				digits[i] = '0'
+			}
+
+			if i < 0 {
+				digits = append([]byte{'1'}, digits...)
+			} else {
+				digits[i]++
+			}
+		}
+
+		intPart = string(digits[:len(digits)-maxDecDigit])
+		frac = string(digits[len(digits)-maxDecDigit:])
 	}
 
-	_, err := b.WriteString(s)
+	if len(intPart) > 12 {
+		return ErrInvalidDecimal
+	}
+
+	frac = strings.TrimRight(frac, "0")
+	// Ensure at least one digit after the decimal point.
+	if frac == "" {
+		frac = "0"
+	}
+
+	if d < 0 && (intPart != "0" || frac != "0") {
+		intPart = "-" + intPart
+	}
+
+	_, err := b.WriteString(intPart + "." + frac)
 
 	return err
 }
